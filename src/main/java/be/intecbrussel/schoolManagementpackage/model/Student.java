@@ -14,7 +14,8 @@ public class Student {
     String emailAddress;
     long phoneNumber;
     String address;
-    double percentage;
+    double result;
+
 
     public long getId() {
         return id;
@@ -55,12 +56,12 @@ public class Student {
     public void setAddress(String address) {
         this.address = address;
     }
-    public double getPercentage() {
-        return percentage;
+    public double getResult() {
+        return result;
     }
 
-    public void setPercentage(double percentage) {
-        this.percentage = percentage;
+    public void setResult(double result) {
+        this.result = result;
     }
 
 

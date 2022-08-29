@@ -63,13 +63,13 @@ public class StudentServiceImpl implements StudentService {
                 existingStudent.setAddress(student.getAddress());
             }
             if(!(Strings.isBlank(student.getEmailAddress()))) {
-                existingStudent.setAddress(student.getEmailAddress());
+                existingStudent.setEmailAddress(student.getEmailAddress());
             }
             if (student.getPhoneNumber() != 0 && student.getPhoneNumber() != -1) {
                 existingStudent.setPhoneNumber(student.getPhoneNumber());
             }
-            if (student.getPercentage() != 0.0 && student.getPercentage() != -1) {
-                existingStudent.setPercentage(student.getPercentage());
+            if (student.getResult() != 0.0 && student.getResult() != -1) {
+                existingStudent.setResult(student.getResult());
             }
             Student updatedStudent = studentRepository.save(existingStudent);
             return updatedStudent;
