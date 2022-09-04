@@ -11,4 +11,7 @@ public interface StudentService {
     public boolean deleteStudent(long id);
     public long countStudents();
     public Student updateStudent(long id , Student student);
+    public List<Student> getStudentsByName(String name);
+    public List<Student> sortStudentsByName();
+    public List<Student> sortStudentsByResult();
 }

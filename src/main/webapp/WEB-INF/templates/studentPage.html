@@ -49,31 +49,40 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="index.html">
-                <i></i>
+            <a class="nav-link" th:href="@{/homePage}">
+                <i class="fas fa-fw fa-folder"></i>
                 <span>HOME</span></a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-               aria-expanded="true" aria-controls="collapsePages">
-                <i class="fas fa-fw fa-folder"></i>
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+               aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-cog"></i>
                 <span>Students</span>
             </a>
-
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Students List:</h6>
+                    <a class="collapse-item"  th:href="@{/allStudents}">ListOfAllStudent</a>
+                    <a class="collapse-item"  th:href="@{/sortedList}">SortStudentListByName</a>
+                    <a class="collapse-item"  th:href="@{/sortedData}">SortStudentListByResult</a>
+                </div>
+            </div>
+        </li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Teachers</span>
             </a>
-
+        </li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Classes</span>
             </a>
+        </li>
     </ul>
     <!-- End of Sidebar -->
 
@@ -92,13 +101,13 @@
                 </button>
 
                 <!-- Topbar Search -->
-                <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <form  th:action="@{searchByName}" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+                >
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                        <input type="text" name="name"  class="form-control bg-light border-0 small" placeholder="Search for..."
                                aria-label="Search" aria-describedby="basic-addon2">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
+                            <button class="btn btn-primary" type="submit">
                                 <i class="fas fa-search fa-sm"></i>
                             </button>
                         </div>
@@ -140,24 +149,28 @@
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Add</h4>
+                                    <button type="button" class="close" data-dismiss="modal"></button>
+                                    <h4 class="modal-title"  >Add New Student</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form   th:action="@{/addNewStudent}" th:method ="Post">
+
+                                    <!--upload image-->
+
+
+                                    <form   th:action="@{/addNewStudent}" th:method ="Post" enctype="multipart/form-data">
                                         <label>Name</label><br>
-                                        <input type="text" name="name">  <br>
+                                        <input type="text" name="name" required>  <br>
                                         <label>Address</label><br>
-                                        <input type="text" name="address" > <br>
+                                        <input type="text" name="address" required > <br>
                                         <label>emailAddress</label><br>
-                                        <input type="text" name="emailAddress"  > <br>
+                                        <input type="text" name="emailAddress" required > <br>
                                         <label>phoneNumber</label><br>
-                                        <input type="text" name="phoneNumber" > <br>
+                                        <input type="text" name="phoneNumber" required > <br>
                                         <label>Result</label><br>
-                                        <input type="text" name="result"> <br>
+                                        <input type="text" name="result" required> <br><br>
 
-
-                                        <input type="submit" value="add"> <br>
+                                            <input type="file" name="image" accept="image/*" class="form-control-file"><br>
+                                        <input type="submit" value="submit"> <br>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
@@ -273,26 +286,27 @@
 
                             <table id="student">
                                 <tr>
+                                    <th>Image</th>
                                     <th>Name</th>
                                     <th>Address</th>
                                     <th>EmailAddress</th>
                                     <th>PhoneNumber</th>
                                     <th>Result</th>
-                                    <th>Edit</th>
-                                    <th>delete</th>
+                                    <th>Action</th>
+
                                 </tr>
                                 <tr th:each="student:${students}">
+                                    <td><img th:src="@{/images/{image}(image=${student.link})}" alt="..." width="50",lenght="50" /></td>
                                     <td th:text="${student.name}"></td>
                                     <td th:text="${student.Address}"></td>
                                     <td th:text="${student.emailAddress}"></td>
                                     <td th:text="${student.phoneNumber}"></td>
                                     <td th:text="${student.result}"></td>
                                     <td>
-                                        <!-- Trigger the modal with a button -->
-                                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                                        <!-- Trigger the modal with a button class="btn btn-info btn-lg"  -->
+                                        <button type="button" data-toggle="modal"
                                                 th:attr="data-target=${'#editModal'+student.id}">
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                            Modify
+                                            <i style="font-size:9px" class="fa">&#xf044;</i>                                            <!--Modify-->
                                         </button>
 
                                         <!-- Modal -->
@@ -305,6 +319,9 @@
                                                         <h4 class="modal-title">Update Student Data</h4>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <img th:src="@{/images/{image}(image=${student.link})}" class="float-right"
+                                                             alt="..." width="110",lenght="100"/>
+
                                                         <form th:action="@{'updateStudent/{id}'(id=${student.id})}"
                                                               th:method="PUT">
                                                             <label>Name </label><br/>
@@ -334,8 +351,9 @@
 
                                             </div>
                                         </div>
-                                    </td>
-                                    <td>
+                                  <!--  </td>
+                                    <td>-->
+
                                         <form action="#" th:action="@{'/deleteStudent/{id}'(id=${student.id})}"
                                               th:method="delete">
                                             <input type="hidden" name="_method" value="delete"/>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a th:href="@{/deleteStudent/{id}(id= ${student.id})}"><i style='font-size:24px' class='far'>&#xf2ed;</i></a>
+
+<td><form action="#" th:action="@{'/deleteStudent/{id}'(id=${student.id})}" th:method="delete" >
+    <input type="hidden" name="_method" value="delete" />
+    <i style='font-size:24px' class='far' onclick="delete">&#xf2ed;</i>
+</form>
+</td>
+
+
+<td><form action="#" th:action="@{'/deleteStudent/{id}'(id=${student.id})}" th:method="delete" >
+    <input type="hidden" name="_method" value="delete" />
+    <button type="delete" id="submitButton"> </button>
+</form>
+</td>
+
+<!-- <form th:action="@{'updateStudent/{id}'(id=${student.id})}" th:method ="PUT" >
+                                        <input type="text" name="name" />
+                                        <button type="submit" >Modify</button>
+                                    </form>-->
+
+<!--student link attributes  ---data-toggle="collapse" data-target="#collapsePages"
+                   aria-expanded="true" aria-controls="collapsePages"-->
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+       aria-expanded="true" aria-controls="collapsePages" th:href="@{/allStudents}">
+        <i class="fas fa-fw fa-folder"></i>
+        <span>Students</span>
+    </a>
+
+</body>
+</html>

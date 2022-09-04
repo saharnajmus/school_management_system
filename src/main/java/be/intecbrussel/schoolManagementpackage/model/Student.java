@@ -10,12 +10,12 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
+    String link;
     String name;
     String emailAddress;
     long phoneNumber;
     String address;
     double result;
-
 
     public long getId() {
         return id;
@@ -23,6 +23,14 @@ public class Student {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getName() {
@@ -56,6 +64,7 @@ public class Student {
     public void setAddress(String address) {
         this.address = address;
     }
+
     public double getResult() {
         return result;
     }
@@ -64,15 +73,16 @@ public class Student {
         this.result = result;
     }
 
-
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
+                ", link='" + link + '\'' +
                 ", name='" + name + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", phoneNumber=" + phoneNumber +
                 ", address='" + address + '\'' +
+                ", result=" + result +
                 '}';
     }
 }

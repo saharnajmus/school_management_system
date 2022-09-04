@@ -7,8 +7,9 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -56,13 +57,13 @@ public class StudentServiceImpl implements StudentService {
         if (studentRepository.findById(id).isPresent()) {
             Student existingStudent = studentRepository.findById(id).get();
 
-            if(!(Strings.isBlank(student.getName())))  {
+            if (!(Strings.isBlank(student.getName()))) {
                 existingStudent.setName(student.getName());
             }
-            if(!(Strings.isBlank(student.getAddress()))) {
+            if (!(Strings.isBlank(student.getAddress()))) {
                 existingStudent.setAddress(student.getAddress());
             }
-            if(!(Strings.isBlank(student.getEmailAddress()))) {
+            if (!(Strings.isBlank(student.getEmailAddress()))) {
                 existingStudent.setEmailAddress(student.getEmailAddress());
             }
             if (student.getPhoneNumber() != 0 && student.getPhoneNumber() != -1) {
@@ -77,4 +78,39 @@ public class StudentServiceImpl implements StudentService {
             return new Student();
         }
     }
+
+    @Override
+    public List<Student> getStudentsByName(String name) {
+        List<Student> students = new ArrayList<>();
+        List<Student> existingStudents = studentRepository.findAll();
+        for (Student student : existingStudents) {
+            String studentName = student.getName();
+            if (!studentName.isBlank() && studentName.toLowerCase().contains(name.toLowerCase())) {
+                students.add(student);
+            }
+        }
+        return students;
+    }
+
+    @Override
+    public List<Student> sortStudentsByName() {
+        List<Student> studentList = studentRepository.findAll();
+        List<Student> sortedList =
+        studentList.stream().sorted(Comparator.comparing(Student::getName))
+                .collect(Collectors.toList());
+
+        return sortedList;
+    }
+
+    @Override
+    public List<Student> sortStudentsByResult() {
+        List<Student> studentList = studentRepository.findAll();
+        List<Student> sortedList =
+                studentList.stream().sorted(Comparator.comparing(Student::getResult).reversed())
+                        .collect(Collectors.toList());
+
+        return sortedList;
+    }
+
+
 }
