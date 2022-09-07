@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDate;
 
 @Entity
 public class Student {
@@ -16,6 +17,7 @@ public class Student {
     long phoneNumber;
     String address;
     double result;
+    LocalDate date;
 
     public long getId() {
         return id;
@@ -73,6 +75,14 @@ public class Student {
         this.result = result;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -83,6 +93,7 @@ public class Student {
                 ", phoneNumber=" + phoneNumber +
                 ", address='" + address + '\'' +
                 ", result=" + result +
+                ", date=" + date +
                 '}';
     }
 }

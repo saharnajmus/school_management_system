@@ -12,7 +12,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Controller
 public class StudentController {
@@ -42,7 +45,10 @@ public class StudentController {
 
            student.setLink(file.getOriginalFilename());
        }
-        student.setLink("student1.jpg");
+       else{
+        student.setLink("noImage.jpg");}
+
+          student.setDate(LocalDate.now());
         studentService.createStudent(student);
         return "redirect:/allStudents";
     }
@@ -79,5 +85,29 @@ public class StudentController {
         model.addAttribute("students" ,studentService.sortStudentsByResult());
         return "studentPage";
     }
+ @GetMapping("barChart")
+    public String getBarChart(Model model){
+     Map<Integer, Integer> graphData = new TreeMap<>();
+       Integer newEnrollments = 1;
+
+     List<Student> studentList = studentService.getAllStudents();
+     for(Student student:studentList){
+         int year = student.getDate().getYear();
+
+
+     if(graphData.containsKey(year)){
+        Integer value= graphData.get(year);
+        value++;
+        graphData.put(year,value);
+
+     }
+     else{
+         graphData.put(year,1);
+     }
+     }
+     model.addAttribute("chartData" ,graphData);
+
+        return "barChartExample";
+ }
 
 }

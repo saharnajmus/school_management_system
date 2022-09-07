@@ -20,6 +20,7 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+
 </head>
 
 <body id="page-top">
@@ -48,23 +49,14 @@
                     <span>HOME</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                   aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link collapsed" th:href="@{/allStudents}">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Students</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Student list</h6>
-                        <a class="collapse-item"  th:href="@{/allStudents}">ListOfAllStudent</a>
-                        <a class="collapse-item"  th:href="@{/sortedList}">SortedListOfStudent</a>
-                        <a class="collapse-item"  th:href="@{/sortedData}">SortStudentListByResult</a>
 
-                    </div>
-                </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapsePages"
                    aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Teachers</span>
@@ -418,8 +410,15 @@
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
+                                <!-- <div class="chart-area">-->
+                                      <!--  <canvas id="myChart"
+                                                style="width:100%;max-width:600px"></canvas>-->
+                                        <!--id="myChart" -->
+                                  <!--   <div align="center" style="width: 1000px;">-->
+                                         <h2>Enrollments Overview</h2>
+                                         <div id="chart_div"></div>
+                                         <!--<div id="piechart" style="width: 900px; height: 500px;"></div>-->
+                                     </div>
                                     </div>
                                 </div>
                             </div>
@@ -684,6 +683,40 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+    <!--Bar Chart scripts-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script th:inline="javascript">
+        var real_data = /*[[${chartData}]]*/'noValue';
+        $(document).ready(function() {
+            google.charts.load('current', {
+                packages : [ 'corechart', 'bar' ]
+            });
+            google.charts.setOnLoadCallback(drawColumnChart);
+        });
+        function drawColumnChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Year');
+            data.addColumn('number', 'Views');
+            Object.keys(real_data).forEach(function(key) {
+                data.addRow([ key, real_data[key] ]);
+            });
+            var options = {
+                title : 'Blog stats',
+                hAxis : {
+                    title : 'Years',
+                },
+                vAxis : {
+                    title : 'View Count'
+                }
+            };
+            var chart = new google.visualization.ColumnChart(document
+                    .getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+
+    </script>
 
 </body>
 
