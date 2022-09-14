@@ -161,7 +161,7 @@
                                         <br><br>
                                         <select name="myClass" id="myClass_id"  >
                                             <option value="0">select class</option>
-                                            <option name="myClass" th:each="myclass : ${classList}" th:value="${myclass.id}" th:text="${myclass.name}"></option>
+                                            <option name="myClass" th:each="myclass : ${classList}" th:value="${myclass.id}" th:text="|${myclass.name}-${myclass.section}|"></option>
                                         </select>
                                         <input type="file" name="image" accept="image/*" class="form-control-file"><br>
                                         <input type="submit" value="submit"> <br>
@@ -232,7 +232,7 @@
                                 <tr th:each="teacher:${teachers}">
                                     <td><img th:src="@{/images/{image}(image=${teacher.link})}" alt="..." width="50",lenght="50" /></td>
                                     <td th:text="${teacher.name}"></td>
-                                    <td th:text="${teacher.myClass.name}"></td>
+                                    <td th:text="|${teacher.myClass.name}-${teacher.myClass.section}|"></td>
                                     <td th:text="${teacher.address}"></td>
                                     <td th:text="${teacher.emailAddress}"></td>
                                     <td th:text="${teacher.phoneNumber}"></td>
@@ -274,8 +274,8 @@
                                                                    th:value="${teacher.phoneNumber}"> <br>
 
                                                             <select name="myClass" >
-                                                                <option value="${teacher.myClass.id}" th:text="${teacher.myClass.name}"/>
-                                                                <option name="myClass" th:each="myclass : ${classList}" th:value="${myclass.id}" th:text="${myclass.name}"></option>
+                                                                <option value="${teacher.myClass.id}" th:text="|${teacher.myClass.name}-${teacher.myClass.section}|"/>
+                                                                <option name="myClass" th:each="myclass : ${classList}" th:value="${myclass.id}" th:text="|${myclass.name}-${myclass.section}|"></option>
                                                             </select>
                                                             <input type="submit" value="update Teacher"> <br>
                                                         </form>
