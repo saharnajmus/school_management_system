@@ -68,12 +68,11 @@ public class TeacherServiceImpl implements TeacherService {
             if (!(Strings.isBlank(teacher.getEmailAddress()))) {
                 existingTeacher.setEmailAddress(teacher.getEmailAddress());
             }
-            if (!(Strings.isBlank(teacher.getPhoneNumber())) && (teacher.getPhoneNumber().length() > 5)) {
-            }
-
+            if (!(Strings.isBlank(teacher.getPhoneNumber())) && (teacher.getPhoneNumber().length() > 5))
             {
                 existingTeacher.setPhoneNumber(teacher.getPhoneNumber());
             }
+            existingTeacher.setMyClass(teacher.getMyClass());
 
             Teacher updatedTeacher = teacherRepository.save(existingTeacher);
             return updatedTeacher;

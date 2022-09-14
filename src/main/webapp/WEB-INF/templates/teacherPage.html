@@ -37,10 +37,11 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+         <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/homePage}">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i style='font-size:24px' class='fas'>&#xf406;</i>
             </div>
+
             <div class="sidebar-brand-text mx-3"> Admin Name</div>
         </a>
 
@@ -69,8 +70,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-               aria-expanded="true" aria-controls="collapsePages">
+            <a class="nav-link collapsed" th:href="@{/allClasses}">
                 <i style='font-size:10px' class='fas'>&#xf549;</i>
                 <span>Classes</span>
             </a>
@@ -112,9 +112,8 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                            <img class="img-profile rounded-circle"
-                                 src="img/undraw_profile.svg">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrator</span>
+                            <img class="img-profile rounded-circle" src="/images/student3.jpg">
                         </a>
                     </li>
 
@@ -274,6 +273,10 @@
                                                             <input type="tel" name="phoneNumber" pattern="[0-9]{3}-[0-9]{6}"
                                                                    th:value="${teacher.phoneNumber}"> <br>
 
+                                                            <select name="myClass" >
+                                                                <option value="${teacher.myClass.id}" th:text="${teacher.myClass.name}"/>
+                                                                <option name="myClass" th:each="myclass : ${classList}" th:value="${myclass.id}" th:text="${myclass.name}"></option>
+                                                            </select>
                                                             <input type="submit" value="update Teacher"> <br>
                                                         </form>
                                                     </div>
