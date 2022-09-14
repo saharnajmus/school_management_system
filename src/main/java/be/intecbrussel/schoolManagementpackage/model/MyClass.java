@@ -1,20 +1,20 @@
 package be.intecbrussel.schoolManagementpackage.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 public class MyClass {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
     String name;
     char section;
 
-    @OneToMany
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Teacher teacher;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "myClass")
     private Set<Student> students;
 
     public long getId() {
@@ -47,5 +47,13 @@ public class MyClass {
 
     public void setStudents(Set<Student> students) {
         this.students = students;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 }

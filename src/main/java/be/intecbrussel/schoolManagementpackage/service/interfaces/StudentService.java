@@ -12,6 +12,7 @@ public interface StudentService {
     public long countStudents();
     public Student updateStudent(long id , Student student);
     public List<Student> getStudentsByName(String name);
-    public List<Student> sortStudentsByName();
-    public List<Student> sortStudentsByResult();
+    public List<Student> sortStudentsByName(List<Student> studentList);
+    public List<Student> sortStudentsByResult(List<Student> studentList);
+    public List<Student> getStudentDataByPageNum(int pageNum);
 }

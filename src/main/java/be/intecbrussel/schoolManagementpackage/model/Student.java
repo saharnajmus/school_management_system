@@ -1,23 +1,40 @@
 package be.intecbrussel.schoolManagementpackage.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    long id;
-    String link;
-    String name;
-    String emailAddress;
-    long phoneNumber;
-    String address;
-    double result;
-    LocalDate date;
+    private long id;
+    private String link;
+
+    @NotNull(message = "please enter name")
+    private String name;
+
+    @NotNull(message = "please enter valid email address")
+    @Email(message = "please enter valid email address")
+    private String emailAddress;
+
+    @NotNull
+    private String phoneNumber;
+
+    private String address;
+    @Digits(message = "please enter percentage of student", integer = 2, fraction = 2)
+    private double result;
+    private LocalDate date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "myClass_id")
+    private MyClass myClass;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
     public long getId() {
         return id;
@@ -51,11 +68,11 @@ public class Student {
         this.emailAddress = emailAddress;
     }
 
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -83,6 +100,14 @@ public class Student {
         this.date = date;
     }
 
+    public MyClass getMyClass() {
+        return myClass;
+    }
+
+    public void setMyClass(MyClass myClass) {
+        this.myClass = myClass;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -90,10 +115,11 @@ public class Student {
                 ", link='" + link + '\'' +
                 ", name='" + name + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
-                ", phoneNumber=" + phoneNumber +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
                 ", result=" + result +
                 ", date=" + date +
+                ", myClass=" + myClass +
                 '}';
     }
 }

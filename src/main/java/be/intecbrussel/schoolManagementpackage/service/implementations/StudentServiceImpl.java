@@ -66,10 +66,13 @@ public class StudentServiceImpl implements StudentService {
             if (!(Strings.isBlank(student.getEmailAddress()))) {
                 existingStudent.setEmailAddress(student.getEmailAddress());
             }
-            if (student.getPhoneNumber() != 0 && student.getPhoneNumber() != -1) {
+            if (!(Strings.isBlank(student.getPhoneNumber()))&&(student.getPhoneNumber().length()>5)){
+            }
+
+            {
                 existingStudent.setPhoneNumber(student.getPhoneNumber());
             }
-            if (student.getResult() != 0.0 && student.getResult() != -1) {
+            if (student.getResult()>0.0 && student.getResult() <=100) {
                 existingStudent.setResult(student.getResult());
             }
             Student updatedStudent = studentRepository.save(existingStudent);
@@ -93,8 +96,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> sortStudentsByName() {
-        List<Student> studentList = studentRepository.findAll();
+    public List<Student> sortStudentsByName(List<Student> studentList) {
         List<Student> sortedList =
         studentList.stream().sorted(Comparator.comparing(Student::getName))
                 .collect(Collectors.toList());
@@ -103,13 +105,28 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> sortStudentsByResult() {
-        List<Student> studentList = studentRepository.findAll();
+    public List<Student> sortStudentsByResult(List<Student> studentList) {
         List<Student> sortedList =
                 studentList.stream().sorted(Comparator.comparing(Student::getResult).reversed())
                         .collect(Collectors.toList());
 
         return sortedList;
+    }
+
+    @Override
+    public List<Student> getStudentDataByPageNum(int pageNum) {
+        List<Student> studentList = studentRepository.findAll();
+        int value = pageNum * 6;
+        int index1 = 0;
+        if(pageNum!=1){
+            index1 = value/pageNum;
+        }
+        int index2 = index1+ 6;
+        if(index2>studentList.size()){
+            index2 =studentList.size();
+        }
+        return studentList.subList(index1,index2);
+
     }
 
 

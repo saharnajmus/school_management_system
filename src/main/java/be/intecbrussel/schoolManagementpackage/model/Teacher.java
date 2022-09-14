@@ -1,6 +1,13 @@
 package be.intecbrussel.schoolManagementpackage.model;
 
+import antlr.StringUtils;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -10,11 +17,15 @@ public class Teacher {
     long id;
     String name;
     String emailAddress;
-    long phoneNumber;
     String Address;
-    @OneToOne
-   private MyClass myClass;
-    @OneToMany
+    String link;
+    @NotNull
+    String phoneNumber;
+    private LocalDate date;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private MyClass myClass;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
     private Set<Student> students;
 
 
@@ -42,11 +53,11 @@ public class Teacher {
         this.emailAddress = emailAddress;
     }
 
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -56,6 +67,22 @@ public class Teacher {
 
     public void setAddress(String address) {
         Address = address;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public MyClass getMyClass() {

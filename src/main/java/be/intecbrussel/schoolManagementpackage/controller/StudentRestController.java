@@ -65,11 +65,6 @@ public class StudentRestController {
             return new ResponseEntity("student with id " + id + " is removed " , HttpStatus.OK);
         }
     }
-    @GetMapping("/sort")
-    public ResponseEntity sortStudent(){
-        return ResponseEntity.ok(List.of(studentService.sortStudentsByName()));
-
-    }
 
 
 }

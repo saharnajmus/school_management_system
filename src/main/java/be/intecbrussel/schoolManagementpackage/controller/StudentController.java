@@ -1,5 +1,6 @@
 package be.intecbrussel.schoolManagementpackage.controller;
 
+import be.intecbrussel.schoolManagementpackage.model.MyClass;
 import be.intecbrussel.schoolManagementpackage.model.Student;
 import be.intecbrussel.schoolManagementpackage.service.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Controller
 public class StudentController {
@@ -29,26 +28,39 @@ public class StudentController {
 
     @GetMapping("allStudents")
     public String showAllStudent(Model model) {
-        model.addAttribute("students",studentService.getAllStudents());
+
+        List<Student> allStudents = studentService.getAllStudents();
+        double pageSize = Math.ceil(allStudents.size() / 6.0);
+        List<Student> studentData = studentService.getStudentDataByPageNum(1);
+        if (allStudents.size() == 0) {
+            pageSize = 1;
+        }
+
+
+        model.addAttribute("students", studentData);
         model.addAttribute("count", studentService.countStudents());
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageNumber", 1);
+
+
         return "studentPage";
     }
 
     @PostMapping("addNewStudent")
     public String addStudent(@ModelAttribute("student") Student student, @RequestParam("image") MultipartFile file) throws IOException {
 
-       if(!file.isEmpty()) {
-           StringBuilder fileNames = new StringBuilder();
-           Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
-           fileNames.append(file.getOriginalFilename());
-           Files.write(fileNameAndPath, file.getBytes());
+        if (!file.isEmpty()) {
+            StringBuilder fileNames = new StringBuilder();
+            Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
+            fileNames.append(file.getOriginalFilename());
+            Files.write(fileNameAndPath, file.getBytes());
 
-           student.setLink(file.getOriginalFilename());
-       }
-       else{
-        student.setLink("noImage.jpg");}
+            student.setLink(file.getOriginalFilename());
+        } else {
+            student.setLink("noImage.jpg");
+        }
+        student.setDate(LocalDate.now());
 
-          student.setDate(LocalDate.now());
         studentService.createStudent(student);
         return "redirect:/allStudents";
     }
@@ -69,45 +81,129 @@ public class StudentController {
 
     @GetMapping("searchByName")
     public String searchStudent(@ModelAttribute("student") Student student, Model model) {
-
+        List<Student> allStudents = studentService.getAllStudents();
+        double pageSize = Math.ceil(allStudents.size() / 6.0);
+        if (allStudents.size() == 0) {
+            pageSize = 1;
+        }
         List<Student> studentsByName = studentService.getStudentsByName(student.getName());
-        model.addAttribute("students", studentsByName);
+        if (!(studentsByName.isEmpty())) {
+            model.addAttribute("students", studentsByName);
+
+        } else {
+            List<Student> emptyList = new ArrayList<>();
+            model.addAttribute("students", emptyList);
+        }
         model.addAttribute("count", studentService.countStudents());
+        model.addAttribute("pageNumber", 1);
+        model.addAttribute("pageSize", pageSize);
+
+
         return "studentPage";
     }
-    @GetMapping("sortedList")
-    public String sortStudentListByName(Model model){
-        model.addAttribute("students" ,studentService.sortStudentsByName());
+
+    @GetMapping("sortedList/{pageNum}")
+    public String sortStudentListByName(@PathVariable String pageNum, Model model) {
+        List<Student> allStudents = studentService.getAllStudents();
+        double pageSize = Math.ceil(allStudents.size() / 6.0);
+        if (allStudents.size() == 0) {
+            pageSize = 1;
+        }
+        int pageNumInInt;
+        try {
+            pageNumInInt = Integer.parseInt(pageNum);
+        } catch (NumberFormatException nfe) {
+            System.out.println("give a proper number");
+            pageNumInInt = 1;
+        }
+        List<Student> studentData = studentService.getStudentDataByPageNum(pageNumInInt);
+        List<Student> sortedList = studentService.sortStudentsByName(studentData);
+
+
+        model.addAttribute("students", sortedList);
+        model.addAttribute("count", studentService.countStudents());
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageNumber", pageNum);
+
+
         return "studentPage";
     }
-    @GetMapping("sortedData")
-    public String sortStudentListByResult(Model model){
-        model.addAttribute("students" ,studentService.sortStudentsByResult());
+
+
+    @GetMapping("sortedData/{pageNum}")
+    public String sortStudentListByResult(@PathVariable String pageNum, Model model) {
+        List<Student> allStudents = studentService.getAllStudents();
+        double pageSize = Math.ceil(allStudents.size() / 6.0);
+        if (allStudents.size() == 0) {
+            pageSize = 1;
+        }
+        int pageNumInInt;
+        try {
+            pageNumInInt = Integer.parseInt(pageNum);
+        } catch (NumberFormatException nfe) {
+            System.out.println("give a proper number");
+            pageNumInInt = 1;
+        }
+        List<Student> studentData = studentService.getStudentDataByPageNum(pageNumInInt);
+        List<Student> sortedData = studentService.sortStudentsByResult(studentData);
+
+
+        model.addAttribute("students", sortedData);
+        model.addAttribute("count", studentService.countStudents());
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageNumber", pageNum);
+
+
         return "studentPage";
     }
- @GetMapping("barChart")
-    public String getBarChart(Model model){
-     Map<Integer, Integer> graphData = new TreeMap<>();
-       Integer newEnrollments = 1;
 
-     List<Student> studentList = studentService.getAllStudents();
-     for(Student student:studentList){
-         int year = student.getDate().getYear();
+    @GetMapping("barChart")
+    public String getBarChart(Model model) {
+        Map<Integer, Integer> graphData = new TreeMap<>();
+        Integer newEnrollments = 1;
+
+        List<Student> studentList = studentService.getAllStudents();
+        for (Student student : studentList) {
+            int year = student.getDate().getYear();
 
 
-     if(graphData.containsKey(year)){
-        Integer value= graphData.get(year);
-        value++;
-        graphData.put(year,value);
+            if (graphData.containsKey(year)) {
+                Integer value = graphData.get(year);
+                value++;
+                graphData.put(year, value);
 
-     }
-     else{
-         graphData.put(year,1);
-     }
-     }
-     model.addAttribute("chartData" ,graphData);
+            } else {
+                graphData.put(year, 1);
+            }
+        }
+        model.addAttribute("chartData", graphData);
 
         return "barChartExample";
- }
+    }
+
+    @GetMapping("studentData/{pageNum}")
+    public String showStudentDataByPageNumber(@PathVariable String pageNum, Model model) {
+        List<Student> allStudents = studentService.getAllStudents();
+        double pageSize = Math.ceil(allStudents.size() / 6.0);
+        if (allStudents.size() == 0) {
+            pageSize = 1;
+        }
+
+        int pageNumInInt;
+        try {
+            pageNumInInt = Integer.parseInt(pageNum);
+        } catch (NumberFormatException nfe) {
+            System.out.println("give a proper number");
+            pageNumInInt = 1;
+        }
+        List<Student> studentData = studentService.getStudentDataByPageNum(pageNumInInt);
+
+        model.addAttribute("students", studentData);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("pageNumber", pageNum);
+        model.addAttribute("count", studentService.countStudents());
+
+        return "studentPage";
+    }
 
 }
